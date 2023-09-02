@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/amita</item>
+        <item>@font/changa_one_italic</item>
+        <item>@font/quantico_bold_italic</item>
+    </array>
+</resources>
