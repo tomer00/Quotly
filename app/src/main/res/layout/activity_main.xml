@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ui.activities.MainActivity">
 
     <com.tomer.quotly.ui.views.BgGradientView
@@ -18,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="160dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:contentDescription="@string/des"
@@ -27,8 +28,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_margin="8dp"
             android:adjustViewBounds="true"
             android:background="@drawable/round_bg"
@@ -42,13 +43,20 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <com.tomer.quotly.ui.views.BlurCardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="@id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@id/constraintLayout"
+        app:layout_constraintTop_toTopOf="@id/constraintLayout" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:paddingBottom="32dp"
-        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
         app:layout_constraintTop_toBottomOf="@+id/topBar">
 
@@ -59,8 +67,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/changa_one_italic"
             android:gravity="center"
+            android:paddingHorizontal="8dp"
             android:paddingVertical="12dp"
-            android:text="“A musician must make music, an artist must paint, a poet must write, if he is to be ultimately at peace with himself. What a man can be, he must be”"
+            android:text="“A musician must make music, a poet must write, if he is to be ultimately at peace with himself. What a man can be, he must be”"
             android:textColor="@color/black"
             android:textSize="28sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,34 +79,44 @@
             android:id="@+id/tvAuthor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/amita"
-            android:text="HIMANSHU TOmer"
             android:layout_marginEnd="20dp"
+            android:fontFamily="@font/amita"
+            android:text="~ HIMANSHU TOmer"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvQuote" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:id="@+id/bt_share"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        app:layout_constraintEnd_toEndOf="@id/constraintLayout"
-        android:layout_marginEnd="12dp"
-        android:src="@drawable/ic_share"
-        android:contentDescription="@string/des"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
-    <ImageView
-        android:id="@+id/bt_addFav"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        app:layout_constraintEnd_toStartOf="@id/bt_share"
-        android:layout_marginEnd="12dp"
-        android:src="@drawable/ic_fav"
-        android:contentDescription="@string/des"
-        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+        <ImageView
+            android:id="@+id/bt_addFav"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/des"
+            android:src="@drawable/ic_fav"
+            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
+            app:layout_constraintEnd_toStartOf="@id/bt_share"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+        <ImageView
+            android:id="@+id/bt_share"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/des"
+            android:src="@drawable/ic_share"
+            app:layout_constraintEnd_toEndOf="@id/constraintLayout" />
+
+
+    </LinearLayout>
+
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView"
@@ -112,7 +131,7 @@
             android:id="@+id/ll_catagory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
     </HorizontalScrollView>
 
 

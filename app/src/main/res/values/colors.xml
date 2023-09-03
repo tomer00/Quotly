@@ -2,8 +2,8 @@
 <resources>
 
     <color name="primary">#d85e47</color>
-    <color name="primary_dark">#0463CA</color>
-    <color name="primary_light">#B0D6F5</color>
+    <color name="primary_dark">#A23D2A</color>
+    <color name="primary_light">#EC816C</color>
     <color name="accent">#09B1EC</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
@@ -14,4 +14,13 @@
     <color name="trans">#00000000</color>
     <color name="black">#000</color>
     <color name="background">#fdfdfd</color>
+
+    <color name="sea_green">#54f2f1</color>
+    <color name="yellow">#ffb610</color>
+    <color name="green">#2ce786</color>
+    <color name="peach">#ff7272</color>
+    <color name="voilet">#af7afb</color>
+    <color name="magenta">#ffb610</color>
+    <color name="blue">#4dbbff</color>
+    <color name="dark_blue">#0463CA</color>
 </resources>

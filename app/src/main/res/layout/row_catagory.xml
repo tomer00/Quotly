@@ -6,6 +6,5 @@
     android:background="@drawable/corner_bg"
     android:fontFamily="@font/quantico_bold_italic"
     android:padding="8dp"
-    android:text="catagory1"
     android:textColor="@color/black"
     android:textSize="20sp" />
