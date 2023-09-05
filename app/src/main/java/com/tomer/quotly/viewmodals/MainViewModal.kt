@@ -20,7 +20,13 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
 
     fun onCateClick(cate: String) {
         viewModelScope.launch {
-            currentList = repo.getCateQuotes(cate)
+            val l = repo.getCateQuotes(cate)
+            if (l.isEmpty()) {
+                _isConnected.value = true
+                return@launch
+            }
+            _isConnected.value = false
+            currentList = l
             _currentQuote.value = currentList[Random.nextInt(currentList.size)]
             _currentCate.value = cate
             repo.saveLastCate(cate)
@@ -28,6 +34,61 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
         }
     }
 
+    fun onFavClick() {
+        if (isOpen.value == true)
+            _isOpen.value = false
+        else if (isOpen.value == false || isOpen.value == null) {
+            _isOpen.value = true
+
+
+            if (favList.value!!.isEmpty()) _favList.value = repo.getFavQuotes().toList()
+            if (favList.value!!.isNotEmpty()) {
+                currentList = favList.value!!.toTypedArray()
+                _currentQuote.value = favList.value!![0]
+            }
+        }
+    }
+
+    fun onFavAdd() {
+        if (!repo.hasFav(_currentQuote.value!!._id)) {
+            val newL = _favList.value!!.toMutableList()
+            newL.add(_currentQuote.value!!)
+            _favList.value = newL
+            currentList = newL.toTypedArray()
+            repo.saveFav(_currentQuote.value!!)
+        }
+    }
+
+    fun onFavDel(id: String) {
+        val newL = _favList.value!!.toMutableList()
+        newL.remove(_currentQuote.value!!)
+        _favList.value = newL
+        repo.delFav(id)
+        if (_favList.value!!.isEmpty()){
+            viewModelScope.launch {
+                currentList = repo.getCateQuotes(_currentCate.value!!)
+                _currentQuote.value = currentList.first()
+            }
+            return
+        }
+        currentList = newL.toTypedArray()
+        if (_currentQuote.value!!._id == id) {
+            _currentQuote.value = currentList.first()
+        }
+    }
+
+    fun favSel(id: String) {
+        for (i in _favList.value!!) {
+            if (i._id == id) {
+                _currentQuote.value = i
+                break
+            }
+        }
+    }
+
+    fun isConn(){
+        _isConnected.value  = false
+    }
 
     //region ::CurrentQuote
 
@@ -36,12 +97,30 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
 
     //endregion ::CurrentQuote
 
+    // region ::FavList
+
+    private val _favList = MutableLiveData<List<QuoteItem>>(emptyList())
+    val favList: LiveData<List<QuoteItem>> = _favList
+
+    //endregion ::FavList
+
     // region ::CurrentCate
 
     private val _currentCate = MutableLiveData<String>()
     val currentCate: LiveData<String> = _currentCate
 
     //endregion ::CurrentCate
+
+    //region ::FAV VIEW POSITION
+    private val _isOpen = MutableLiveData<Boolean>()
+    val isOpen: LiveData<Boolean> = _isOpen
+    //endregion ::FAV VIEW POSITION
+
+    // region ::No Internet Visibility
+    private val _isConnected = MutableLiveData<Boolean>()
+    val isConn: LiveData<Boolean> = _isConnected
+    //endregion ::No Internet Visibility
+
 
     init {
         _currentQuote.value = repo.getLastQuote()

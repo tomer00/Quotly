@@ -5,6 +5,7 @@
     android:layout_marginStart="12dp"
     android:background="@drawable/corner_bg"
     android:fontFamily="@font/quantico_bold_italic"
-    android:padding="8dp"
-    android:textColor="@color/black"
-    android:textSize="20sp" />
+    android:paddingVertical="4dp"
+    android:paddingHorizontal="12dp"
+    android:textColor="#333333"
+    android:textSize="18sp" />

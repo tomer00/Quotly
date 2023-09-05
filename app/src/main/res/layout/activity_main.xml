@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:animateLayoutChanges="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -28,6 +29,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/btFavQuotes"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="8dp"
@@ -44,6 +46,7 @@
 
 
     <com.tomer.quotly.ui.views.BlurCardView
+        android:id="@+id/blurCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
@@ -57,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:paddingBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
+        app:layout_constraintBottom_toTopOf="@+id/bottomCateView"
         app:layout_constraintTop_toBottomOf="@+id/topBar">
 
 
@@ -119,20 +122,46 @@
 
 
     <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
+        android:id="@+id/bottomCateView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:scrollbarSize="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="12dp">
-
+        app:layout_constraintBottom_toTopOf="@id/noInternet">
         <LinearLayout
             android:id="@+id/ll_catagory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal" />
     </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:id="@+id/favView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_margin="12dp"
+        android:scrollbarSize="0dp"
+        app:layout_constraintTop_toBottomOf="@id/topBar">
+
+        <LinearLayout
+            android:id="@+id/llFav"
+            android:layout_width="wrap_content"
+            android:animateLayoutChanges="true"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/noInternet"
+        android:text="@string/check_internet"
+        android:background="@color/primary"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_height="wrap_content"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

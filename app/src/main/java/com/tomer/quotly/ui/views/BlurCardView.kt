@@ -30,7 +30,7 @@ class BlurCardView : View {
 //region GLOBALS-->>>
 
 
-    private val colRed = ContextCompat.getColor(context, R.color.primary_light)
+    private val colRed = Color.RED
     private val colGreen = ContextCompat.getColor(context, R.color.green)
 
     private val pBlur = Paint().apply {
@@ -48,6 +48,13 @@ class BlurCardView : View {
         style = Paint.Style.STROKE
     }
 
+    private val pTrans = Paint().apply {
+        color = Color.WHITE
+        isAntiAlias = true
+        isDither = true
+        alpha = 40
+    }
+
 
 //endregion GLOBALS-->>>
 
@@ -60,6 +67,7 @@ class BlurCardView : View {
         pBlur.color = colRed
         canvas.drawCircle(width * .32f, height.toFloat(), 56.toPx(), pBlur)
 
+        canvas.drawRoundRect(0f, 0f, width.toFloat(), height.toFloat(), 32.toPx(), 32.toPx(), pTrans)
         canvas.drawRoundRect(4f, 4f, width - 4f, height - 4f, 32.toPx(), 32.toPx(), pStrokeBorder)
     }
 

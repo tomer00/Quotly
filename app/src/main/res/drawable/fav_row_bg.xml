@@ -3,8 +3,8 @@
     android:color="#66FFFFFF">
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/primary_light"/>
-            <corners android:radius="120dp"/>
+            <stroke android:color="@color/primary" android:width="4dp"/>
+            <corners android:radius="16dp"/>
         </shape>
     </item>
 </ripple>

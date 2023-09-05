@@ -6,6 +6,7 @@ import android.graphics.BlurMaskFilter
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.View
 import com.tomer.quotly.utils.BgBalls
@@ -28,13 +29,13 @@ class BgGradientView : View {
         BgBalls.height = h
         BgBalls.width = w
 
-        for (i in 1..Random.nextInt(4, 8))
+        for (i in 1..Random.nextInt(5, 10))
             balls.add(BgBalls(pBlur))
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        valueAnimator.cancel()
+        aniMat = false
         balls.forEach {
             it.stop()
         }
@@ -52,19 +53,20 @@ class BgGradientView : View {
         maskFilter = BlurMaskFilter(120f, BlurMaskFilter.Blur.NORMAL)
         isAntiAlias = true
     }
-    private val valueAnimator = ValueAnimator.ofInt(0, 1000).apply {
-        this.addUpdateListener {
-            postInvalidate()
-        }
-        duration = 1000
-        repeatCount = -1
-        start()
-    }
+
+    private var aniMat = true
+    private val frameDelay = 80L
 
     private val balls = mutableListOf<BgBalls>()
 
     init {
         setLayerType(LAYER_TYPE_SOFTWARE, null)
+        thread {
+            while (aniMat) {
+                SystemClock.sleep(frameDelay)
+                postInvalidate()
+            }
+        }
     }
 
     //endregion GLOBALS-->>>
@@ -82,6 +84,7 @@ class BgGradientView : View {
         ValueAnimator.ofArgb(pBlur.color, col).apply {
             addUpdateListener {
                 pBlur.color = it.animatedValue as Int
+                postInvalidate()
             }
             duration = 400
             start()

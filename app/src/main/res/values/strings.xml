@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Quotly</string>
     <string name="des">des</string>
+    <string name="check_internet">Check your Internet Connection !!!</string>
 </resources>

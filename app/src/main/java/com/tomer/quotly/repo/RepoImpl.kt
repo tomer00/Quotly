@@ -50,9 +50,18 @@ class RepoImpl @Inject constructor(private val ret: Api, con: Application, priva
         favPref.edit().putString(quoteItem._id, gson.toJson(quoteItem)).apply()
     }
 
-    override fun getFavQuotes(): Array<QuoteItem> {
+    override fun delFav(id: String) {
+        favPref.edit().remove(id).apply()
+    }
 
-        return emptyArray()
+    override fun hasFav(id: String) = favPref.contains(id)
+
+    override fun getFavQuotes(): Array<QuoteItem> {
+        val l = mutableListOf<QuoteItem>()
+        favPref.all.forEach {
+            l.add(gson.fromJson(it.value as String,QuoteItem::class.java))
+        }
+        return l.toTypedArray()
     }
 
 

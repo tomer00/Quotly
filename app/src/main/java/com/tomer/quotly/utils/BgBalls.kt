@@ -31,8 +31,8 @@ class BgBalls(
         pointStart.set(Random.nextInt(width), Random.nextInt(height))
         pointEnd.set(Random.nextInt(width), Random.nextInt(height))
 
-        radiusStart = 20f + (180f - 20f) * Random.nextFloat()
-        radiusEnd = 20f + (180f - 20f) * Random.nextFloat()
+        radiusStart = 14f + (200f - 14f) * Random.nextFloat()
+        radiusEnd = 14f + (200f - 14f) * Random.nextFloat()
     }
 
     private val valueAnimator: ValueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
@@ -44,11 +44,11 @@ class BgBalls(
             pointEnd.set(Random.nextInt(width), Random.nextInt(height))
 
             radiusStart = radiusEnd
-            radiusEnd = 20f + (180f - 20f) * Random.nextFloat()
+            radiusEnd = 14f + (200f - 14f) * Random.nextFloat()
         }
-        duration = Random.nextLong(5000, 60000)
+        duration = Random.nextLong(2400, 60000)
         repeatCount = -1
-        startDelay = Random.nextLong(1000)
+        startDelay = Random.nextLong(5000)
         start()
     }
 
