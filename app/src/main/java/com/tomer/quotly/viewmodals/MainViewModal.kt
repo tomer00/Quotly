@@ -17,6 +17,7 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
 
 
     private var currentList = arrayOf<QuoteItem>()
+    private var currentPos = 0
 
     fun onCateClick(cate: String) {
         viewModelScope.launch {
@@ -27,7 +28,8 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
             }
             _isConnected.value = false
             currentList = l
-            _currentQuote.value = currentList[Random.nextInt(currentList.size)]
+            currentPos = Random.nextInt(currentList.size)
+            _currentQuote.value = currentList[currentPos]
             _currentCate.value = cate
             repo.saveLastCate(cate)
             repo.saveLast(currentQuote.value!!)
@@ -35,9 +37,10 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
     }
 
     fun onFavClick() {
-        if (isOpen.value == true)
+        if (isOpen.value == true) {
             _isOpen.value = false
-        else if (isOpen.value == false || isOpen.value == null) {
+            viewModelScope.launch { currentList = repo.getCateQuotes(_currentCate.value ?: "random") }
+        } else if (isOpen.value == false || isOpen.value == null) {
             _isOpen.value = true
 
 
@@ -45,6 +48,7 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
             if (favList.value!!.isNotEmpty()) {
                 currentList = favList.value!!.toTypedArray()
                 _currentQuote.value = favList.value!![0]
+                currentPos = 0
             }
         }
     }
@@ -64,10 +68,11 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
         newL.remove(_currentQuote.value!!)
         _favList.value = newL
         repo.delFav(id)
-        if (_favList.value!!.isEmpty()){
+        if (_favList.value!!.isEmpty()) {
             viewModelScope.launch {
                 currentList = repo.getCateQuotes(_currentCate.value!!)
                 _currentQuote.value = currentList.first()
+                currentPos = 0
             }
             return
         }
@@ -78,16 +83,27 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
     }
 
     fun favSel(id: String) {
-        for (i in _favList.value!!) {
-            if (i._id == id) {
-                _currentQuote.value = i
+        for (i in _favList.value!!.indices) {
+            if (_favList.value!![i]._id == id) {
+                _currentQuote.value = _favList.value!![i]
+                currentPos = i
                 break
             }
         }
     }
 
-    fun isConn(){
-        _isConnected.value  = false
+    fun isConn() {
+        _isConnected.value = false
+    }
+
+    fun swipe(isRight: Boolean) {
+        if (isRight) currentPos++
+        else currentPos--;
+        if (currentList.isEmpty()) {
+            onCateClick("random")
+        }
+        if (currentPos < 0) currentPos = currentList.size - 1
+        _currentQuote.value = currentList[currentPos % currentList.size]
     }
 
     //region ::CurrentQuote
@@ -125,6 +141,9 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
     init {
         _currentQuote.value = repo.getLastQuote()
         _currentCate.value = repo.getLastCate()
+        viewModelScope.launch {
+            currentList = repo.getCateQuotes(_currentCate.value ?: "random")
+        }
     }
 
 
