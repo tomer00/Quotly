@@ -16,7 +16,7 @@ import kotlin.random.Random
 class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel() {
 
 
-    private var currentList = arrayOf<QuoteItem>()
+    private val currentList = mutableListOf<QuoteItem>()
     private var currentPos = 0
 
     fun onCateClick(cate: String) {
@@ -27,7 +27,8 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
                 return@launch
             }
             _isConnected.value = false
-            currentList = l
+            currentList.clear()
+            currentList.addAll(l)
             currentPos = Random.nextInt(currentList.size)
             _currentQuote.value = currentList[currentPos]
             _currentCate.value = cate
@@ -39,14 +40,18 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
     fun onFavClick() {
         if (isOpen.value == true) {
             _isOpen.value = false
-            viewModelScope.launch { currentList = repo.getCateQuotes(_currentCate.value ?: "random") }
+            viewModelScope.launch {
+                currentList.clear()
+                currentList.addAll(repo.getCateQuotes(_currentCate.value ?: "random"))
+            }
         } else if (isOpen.value == false || isOpen.value == null) {
             _isOpen.value = true
 
 
             if (favList.value!!.isEmpty()) _favList.value = repo.getFavQuotes().toList()
             if (favList.value!!.isNotEmpty()) {
-                currentList = favList.value!!.toTypedArray()
+                currentList.clear()
+                currentList.addAll(favList.value!!)
                 _currentQuote.value = favList.value!![0]
                 currentPos = 0
             }
@@ -58,7 +63,8 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
             val newL = _favList.value!!.toMutableList()
             newL.add(_currentQuote.value!!)
             _favList.value = newL
-            currentList = newL.toTypedArray()
+            currentList.clear()
+            currentList.addAll(newL)
             repo.saveFav(_currentQuote.value!!)
         }
     }
@@ -68,15 +74,18 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
         newL.remove(_currentQuote.value!!)
         _favList.value = newL
         repo.delFav(id)
-        if (_favList.value!!.isEmpty()) {
+        if (newL.isEmpty()) {
             viewModelScope.launch {
-                currentList = repo.getCateQuotes(_currentCate.value!!)
+                currentList.clear()
+                currentList.addAll(repo.getCateQuotes(_currentCate.value!!))
+                if (currentList.isEmpty()) return@launch
                 _currentQuote.value = currentList.first()
                 currentPos = 0
             }
             return
         }
-        currentList = newL.toTypedArray()
+        currentList.clear()
+        currentList.addAll(newL)
         if (_currentQuote.value!!._id == id) {
             _currentQuote.value = currentList.first()
         }
@@ -101,6 +110,7 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
         else currentPos--;
         if (currentList.isEmpty()) {
             onCateClick("random")
+            currentList.add(currentQuote.value!!)
         }
         if (currentPos < 0) currentPos = currentList.size - 1
         _currentQuote.value = currentList[currentPos % currentList.size]
@@ -142,7 +152,8 @@ class MainViewModal @Inject constructor(private val repo: RepoImpl) : ViewModel(
         _currentQuote.value = repo.getLastQuote()
         _currentCate.value = repo.getLastCate()
         viewModelScope.launch {
-            currentList = repo.getCateQuotes(_currentCate.value ?: "random")
+            currentList.clear()
+            currentList.addAll(repo.getCateQuotes(_currentCate.value ?: "random"))
         }
     }
 

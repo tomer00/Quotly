@@ -3,6 +3,7 @@ package com.tomer.quotly.ui.activities
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
@@ -59,16 +60,16 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(b.root)
 
-        val statusHeight = resources.getDimensionPixelSize(resources.getIdentifier("status_bar_height","dimen","android"))
-        if (statusHeight>0){
-           val  p = b.topBar.layoutParams as ConstraintLayout.LayoutParams
-            p.setMargins(0,statusHeight,0,0)
+        val statusHeight = resources.getDimensionPixelSize(resources.getIdentifier("status_bar_height", "dimen", "android"))
+        if (statusHeight > 0) {
+            val p = b.topBar.layoutParams as ConstraintLayout.LayoutParams
+            p.setMargins(0, statusHeight, 0, 0)
             b.topBar.layoutParams = p
         }
 
         //region OBSERVERS
 
-        vm.currentQuote.observe(this) {quote->
+        vm.currentQuote.observe(this) { quote ->
             b.tvQuote.text = quote.content
             "~ ${quote.author}".also { b.tvAuthor.text = it }
             val color = ContextCompat.getColor(this, colors[Random.nextInt(colors.size)])
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                     favView.animate().apply {
                         x(0f)
                         interpolator = OvershootInterpolator(1.1f)
-                        duration = 160
+                        duration = 400
                         start()
                     }
                 }
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 b.apply {
                     favView.animate().apply {
                         x(b.root.width.toFloat())
-                        duration = 240
+                        duration = 320
                         this.withEndAction {
                             favView.visibility = View.GONE
                         }
@@ -116,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                     val tvQuote = view.findViewById(R.id.quote) as TextView
                     val tvAuthor = view.findViewById(R.id.tvAuthor) as TextView
 
-                    tvAuthor.text = i.author
+                    "~ ${i.author}".also { author -> tvAuthor.text = author }
                     tvQuote.text = i.content
 
                     b.llFav.addView(view)
@@ -159,21 +160,22 @@ class MainActivity : AppCompatActivity() {
 
         b.btFavQuotes.setOnClickListener {
             vm.onFavClick()
+            it.performHaptic()
         }
 
         b.btAddFav.setOnClickListener {
             vm.onFavAdd()
             b.blurCard.animateFavParticles(true)
+            it.performHaptic()
         }
         b.btShare.setOnClickListener {
             b.blurCard.animateFavParticles(false)
             shareIntent()
+            it.performHaptic()
         }
         b.noInternet.setOnClickListener {
             vm.isConn()
         }
-
-
 
         b.bgGrad.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN)
@@ -190,15 +192,22 @@ class MainActivity : AppCompatActivity() {
         //endregion CLICK LISTENERS
     }
 
+    private fun View.performHaptic() {
+        this.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING)
+    }
+
     private fun shareIntent() {
-        val sb = StringBuilder(b.tvQuote.text)
-        sb.append("\n~ ")
+        val sb = StringBuilder("Quote of the Day !!!\n\n")
+        sb.append(b.tvQuote.text)
+        sb.append('\n')
         sb.append(b.tvAuthor.text)
+        sb.append("\n\nGet Quotly app from here\n👇👇👇👇👇👇👇👇\n")
+        sb.append("https://github.com/tomer00/CODSOFT-Quotly")
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, sb.toString())
         }
-        b.root.postDelayed({startActivity(shareIntent)},1000)
+        b.root.postDelayed({ startActivity(shareIntent) }, 1200)
     }
 
     //region ::CATE INFLATER
@@ -250,8 +259,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if(hasFocus){
-            window.decorView.systemUiVisibility =( View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN )
+        if (hasFocus) {
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
         }
     }
 

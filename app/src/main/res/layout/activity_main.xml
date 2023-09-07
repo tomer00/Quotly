@@ -16,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="32dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -70,7 +70,7 @@
             android:id="@+id/tvQuote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/changa_one_italic"
+            android:fontFamily="@font/berkshire_swash"
             android:paddingHorizontal="12dp"
             android:paddingVertical="12dp"
             android:textColor="@color/black"
@@ -157,6 +157,7 @@
         android:text="@string/check_internet"
         android:background="@color/primary"
         android:textColor="@color/white"
+        android:fontFamily="@font/quantico_bold_italic"
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center"
         android:visibility="gone"

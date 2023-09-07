@@ -8,6 +8,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.drawable.VectorDrawable
+import android.os.Handler
+import android.os.HandlerThread
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.animation.doOnEnd
@@ -32,7 +34,11 @@ class BlurCardView : View {
         setLayerType(LAYER_TYPE_SOFTWARE, null)
     }
 
-//region GLOBALS-->>>
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        quoteDrawable.setBounds(width - 392, height - 392, width - 32, height)
+    }
+    //region GLOBALS-->>>
 
 
     private val colRed = Color.RED
@@ -64,11 +70,14 @@ class BlurCardView : View {
     private val particles = mutableListOf<Particle>()
     private var isAnim = false
 
-    private val quoteDrawable = (ContextCompat.getDrawable(context,R.drawable.ic_quote_double) as VectorDrawable).apply {
-        setBounds(32,0,392,360)
-    }
+    private val quoteDrawable = ContextCompat.getDrawable(context, R.drawable.ic_quote_double) as VectorDrawable
 
-//endregion GLOBALS-->>>
+    private val thread = HandlerThread("BackgroundThread1").apply {
+        start()
+    }
+    private val handler = Handler(thread.looper)
+
+    //endregion GLOBALS-->>>
 
 
     override fun onDraw(canvas: Canvas) {
@@ -90,13 +99,15 @@ class BlurCardView : View {
     private fun Int.toPx(): Float = context.resources.displayMetrics.density * this
 
     fun setColor(col: Int) {
-        ValueAnimator.ofArgb(pStrokeBorder.color, col).apply {
-            addUpdateListener {
-                pStrokeBorder.color = it.animatedValue as Int
-                postInvalidate()
+        handler.post {
+            ValueAnimator.ofArgb(pStrokeBorder.color, col).apply {
+                addUpdateListener {
+                    pStrokeBorder.color = it.animatedValue as Int
+                    this@BlurCardView.post { postInvalidate() }
+                }
+                duration = 400
+                start()
             }
-            duration = 400
-            start()
         }
     }
 
@@ -107,27 +118,28 @@ class BlurCardView : View {
             color = if (isFav) Color.RED else colGreen
         }
 
-        for (i in 1..Random.nextInt(10, 20))
-            particles.add(
-                Particle(
-                    paint,
-                    if (isFav) PointF(width * .32f, height - 52.toPx())
-                    else PointF(width * .68f,height - 52.toPx())
+        handler.post {
+            for (i in 1..Random.nextInt(10, 20))
+                particles.add(
+                    Particle(
+                        paint,
+                        if (isFav) PointF(width * .32f, height - 52.toPx())
+                        else PointF(width * .68f, height - 52.toPx())
+                    )
                 )
-            )
-
-        isAnim = true
-        ValueAnimator.ofInt(0, 1000).apply {
-            addUpdateListener {
-                postInvalidate()
+            isAnim = true
+            ValueAnimator.ofInt(0, 1000).apply {
+                addUpdateListener {
+                    this@BlurCardView.post { postInvalidate() }
+                }
+                doOnEnd {
+                    isAnim = false
+                    particles.clear()
+                    System.gc()
+                }
+                duration = 2500
+                start()
             }
-            doOnEnd {
-                isAnim = false
-                particles.clear()
-                System.gc()
-            }
-            duration = 2500
-            start()
         }
     }
 

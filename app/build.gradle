@@ -17,7 +17,7 @@ android {
         minSdk 29
         targetSdk 33
         versionCode 1
-        versionName "1.0.0-alpha-0.1"
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -85,4 +85,19 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+
+task copyApk(type :Copy){
+    def sourceDest = layout.projectDirectory.dir("release/app-release.apk")
+    def destDir = "/home/tom/apks"
+    from sourceDest
+    into destDir
+    rename "app-release.apk", rootProject.name+".apk"
+}
+
+tasks.whenTaskAdded { task->
+    if(task.name =="assembleRelease"){
+        task.finalizedBy "copyApk"
+    }
 }

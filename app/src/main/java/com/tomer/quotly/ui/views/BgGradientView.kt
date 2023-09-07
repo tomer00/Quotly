@@ -6,6 +6,9 @@ import android.graphics.BlurMaskFilter
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Looper
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.View
@@ -29,8 +32,10 @@ class BgGradientView : View {
         BgBalls.height = h
         BgBalls.width = w
 
-        for (i in 1..Random.nextInt(5, 10))
-            balls.add(BgBalls(pBlur))
+        handler.post {
+            for (i in 1..Random.nextInt(5, 10))
+                balls.add(BgBalls(pBlur))
+        }
     }
 
     override fun onDetachedFromWindow() {
@@ -39,12 +44,18 @@ class BgGradientView : View {
         balls.forEach {
             it.stop()
         }
+        thread.looper.quitSafely()
+        thread.quitSafely()
     }
 
     //endregion CONSTRUCTOR
 
 
     //region GLOBALS-->>>
+    private val thread = HandlerThread("BackgroundThread").apply {
+        start()
+    }
+    private val handler = Handler(thread.looper)
 
 
     private val colorBalls = Color.CYAN
@@ -81,13 +92,17 @@ class BgGradientView : View {
 
 
     fun setColor(col: Int) {
-        ValueAnimator.ofArgb(pBlur.color, col).apply {
-            addUpdateListener {
-                pBlur.color = it.animatedValue as Int
-                postInvalidate()
+        handler.post {
+            ValueAnimator.ofArgb(pBlur.color, col).apply {
+                addUpdateListener {
+                    pBlur.color = it.animatedValue as Int
+                    this@BgGradientView.post {
+                        postInvalidate()
+                    }
+                }
+                duration = 400
+                start()
             }
-            duration = 400
-            start()
         }
     }
 

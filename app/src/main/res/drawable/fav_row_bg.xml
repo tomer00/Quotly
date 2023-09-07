@@ -4,6 +4,7 @@
     <item android:id="@android:id/background">
         <shape>
             <stroke android:color="@color/primary" android:width="4dp"/>
+            <solid android:color="#42D85E47"/>
             <corners android:radius="16dp"/>
         </shape>
     </item>

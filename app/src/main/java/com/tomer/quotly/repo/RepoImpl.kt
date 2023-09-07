@@ -19,7 +19,7 @@ class RepoImpl @Inject constructor(private val ret: Api, con: Application, priva
     private val defaultQuote by lazy {
         QuoteItem(
             "_cllvgW3qw9C", "Seneca the Younger", "Seneca-the-Younger",
-            "\"Most powerful is he who has himself in his own power.\"", "2020-12-19",
+            "Most powerful is he who has himself in his own power.", "2020-12-19",
             "2023-04-14", 53, arrayListOf()
         )
     }
