@@ -16,7 +16,7 @@
 
 ## Features 📱
 
-<img align="right" src="https://github.com/tomer00/CODSOFT-Quotly/assets/68748487/aa353b12-afe0-4537-9a2e-2b3d6564af7e" alt="Quotly" height="440px">
+<img align="right" src="https://github.com/tomer00/CODSOFT-Quotly/assets/68748487/c98fbc74-07fd-44a7-b4a0-3bfeaaddd8d4" alt="Quotly">
 
 - Discover Quotes: Explore a diverse collection of quotes covering various themes, such as motivation, love, life, and more.
 
@@ -31,6 +31,7 @@
 - Blurred Background with Colorful Dots: Quotly features an eye-catching user interface with a dynamic blurred background adorned with colorful dots, enhancing the overall aesthetic.
 
 <br/>
+
 
 ## Getting Started 🚀
 
